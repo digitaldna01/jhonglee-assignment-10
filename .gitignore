@@ -6,3 +6,6 @@ coco_images_resized/
 
 # Ignore specific pickle file
 image_embeddings.pickle
+
+# venv folder
+venv/
