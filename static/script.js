@@ -1,49 +1,67 @@
-document.getElementById("experiment-form").addEventListener("submit", async function(event) {
-    event.preventDefault();  // Prevent form submission
+document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("image-search-form").addEventListener("submit", async function(event) {
+        event.preventDefault();  // Prevent form submission
 
-    const activation = document.getElementById("activation").value;
-    const lr = parseFloat(document.getElementById("lr").value);
-    const stepNum = parseInt(document.getElementById("step_num").value);
+        const submitButton = document.querySelector("button[type='submit']");
+        submitButton.disabled = true; // 버튼 비활성화
 
-    // Validation checks
-    const acts = ["relu", "tanh", "sigmoid"];
-    if (!acts.includes(activation)) {
-        alert("Please choose from relu, tanh, sigmoid.");
-        return;
-    }
+        const queryType = document.getElementById("query-type").value;
+        const imageQuery = document.getElementById("image-query").files[0];
+        const textQuery = document.getElementById("text-query").value;
+        const hybridWeight = parseFloat(document.getElementById("hybrid-weight").value);
 
-    if (isNaN(lr)) {
-        alert("Please enter a valid number for learning rate.");
-        return;
-    }
+        const formData = new FormData();
+        formData.append("query_type", queryType);
+        formData.append("image_query", imageQuery);
+        formData.append("text_query", textQuery);
+        formData.append("hybrid_weight", hybridWeight);
 
-    if (isNaN(stepNum) || stepNum <= 0) {
-        alert("Please enter a positive integer for Number of Training Steps.");
-        return;
-    }
+        fetch("/run_experiment", {
+            method: "POST",
+            body: formData 
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Show and set images if they exist
+            const resultsDiv = document.getElementById("results");
+            resultsDiv.style.display = "block";
 
-    // If all validations pass, submit the form
-    fetch("/run_experiment", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ activation: activation, lr: lr, step_num: stepNum })
-    })
-    .then(response => response.json())
-    .then(data => {
-        // Show and set images if they exist
-        const resultsDiv = document.getElementById("results");
-        resultsDiv.style.display = "block";
+            // clear previous results
+            const resultContainer = document.getElementById("result-container");
+            resultContainer.innerHTML = "";
 
-        const resultImg = document.getElementById("result_gif");
-        if (data.result_gif) {
-            resultImg.src = `/${data.result_gif}`;
-            resultImg.style.display = "block";
-        }
-    })
-    .catch(error => {
-        console.error("Error running experiment:", error);
-        alert("An error occurred while running the experiment.");
+            // Loop through the images and similarities
+            data.images.forEach((image, index) => {
+                console.log(image)
+                // Create a new result item
+                const resultItem = document.createElement("div");
+                resultItem.className = 'result-item';
+
+                // Create the image element
+                const imgElment = document.createElement("img");
+                imgElment.className = "result-image";
+                imgElment.src = `/coco_images_resized/${image}`;
+                imgElment.alt = `Search Result ${index + 1}`;
+
+                // Create the similarity text
+                const similarityText = document.createElement("p");
+                similarityText.innerHTML = `Similarity: <span class="similarity-score">${data.top_sims[index]}<span>`;
+
+                // Append the image and similarity text to the result item
+                resultItem.appendChild(imgElment);
+                resultItem.appendChild(similarityText);
+
+                // Append the result item to the result container
+                resultContainer.appendChild(resultItem);
+            });
+
+            submitButton.disabled = false;
+
+        })
+        .catch(error => {
+            console.error("Error running experiment:", error);
+            alert("An error occurred while running the experiment.");
+            submitButton.disabled = false;
+        });
     });
 });

@@ -9,18 +9,14 @@
 <body>
     <h1>Image Search</h1>
     <form id="image-search-form">
-        {% comment %} <div class="input-group">
-            <label for="activation">Activation:</label>
-            <input type="str" id="activation" name="activation" required>
-        </div> {% endcomment %}
         <div class="input-group">
             <label for="image-query">Image query:</label>
-            <input type="file" id="image-query" name="image-query" accept="image/*" required>
+            <input type="file" id="image-query" name="image-query" accept="image/*">
         </div>
             
         <div class="input-group">
             <label for="text-query">Text query:</label>
-            <input type="text" id="text-query" name="text-query" required>
+            <input type="text" id="text-query" name="text-query">
         </div>
 
         <div class="input-group">
@@ -33,7 +29,7 @@
             <select id="query-type" name="query-type">
                 <option value="image">Image query</option>
                 <option value="text">Text query</option>
-                <option value="text">Hybrid query</option>
+                <option value="hybrid">Hybrid query</option>
             </select>
         </div>
 
@@ -41,45 +37,12 @@
     </form>
 
     <div id="results" style="display: none;">
-        <h2>Top Search Results</h2>
-        <img id="result-image" src="" alt="Search Result" style="display: none;">
-        <p>Similarity: <span id="similarity-score"></span></p>
-    </div>
-
-    <div id="results" style="display: none;">
         <h2>Top 5 Search Results</h2>
         <div id="result-container">
             <!-- 결과를 동적으로 추가할 공간 -->
-            <div class="result-item" style="display: none;">
-                <img class="result-image" src="" alt="Search Result">
-                <p>Similarity: <span class="similarity-score"></span></p>
-            </div>
-            <!-- 위의 result-item을 반복하여 추가 -->
         </div>
     </div>
 
-    {% comment %} <div id="results" style="display: none;">
-        <h2>Top Search Results</h2>
-        <img id="result_gif" src="" style="display: none;">
-    </div> {% endcomment %}
-
     <script src="/static/script.js"></script>
 </body>
-</html>
-
-
-
-
-
-
-  
-
-
-
-  
-
-<script src="/static/script.js"></script>
-
-</body>
-
 </html>
