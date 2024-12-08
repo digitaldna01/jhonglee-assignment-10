@@ -6,12 +6,15 @@ document.addEventListener("DOMContentLoaded", function() {
         submitButton.disabled = true; // 버튼 비활성화
 
         const queryType = document.getElementById("query-type").value;
+        const embedType = document.getElementById("embed-type").value;
+        
         const imageQuery = document.getElementById("image-query").files[0];
         const textQuery = document.getElementById("text-query").value;
         const hybridWeight = parseFloat(document.getElementById("hybrid-weight").value);
 
         const formData = new FormData();
         formData.append("query_type", queryType);
+        formData.append("embed_type", embedType);
         formData.append("image_query", imageQuery);
         formData.append("text_query", textQuery);
         formData.append("hybrid_weight", hybridWeight);
