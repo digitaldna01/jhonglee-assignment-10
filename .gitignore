@@ -7,5 +7,7 @@ coco_images_resized/
 # Ignore specific pickle file
 image_embeddings.pickle
 
+/__pycache__
+
 # venv folder
 venv/
