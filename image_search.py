@@ -12,8 +12,13 @@ file_path = "coco_images_resized/"
 
 df = pd.read_pickle('image_embeddings.pickle')
 
+MODEL_NAME = 'ViT-B-32'
+PRETRAINED_SOURCE = 'openai'
+model, _, preprocess = create_model_and_transforms(MODEL_NAME, pretrained=PRETRAINED_SOURCE)
+tokenizer = get_tokenizer(MODEL_NAME)
+model.eval()
+
 def embed_image(image_query):
-    model, _, preprocess = create_model_and_transforms('ViT-B/32', pretrained='openai')
     
     # check if the file is image or not
     if isinstance(image_query, str):
@@ -26,7 +31,6 @@ def embed_image(image_query):
     return image_embedding
 
 def embed_text(text_query):
-    model, _, preprocess = create_model_and_transforms('ViT-B/32', pretrained='openai')
     tokenizer = get_tokenizer('ViT-B-32')
     model.eval()
     text = tokenizer([text_query])
